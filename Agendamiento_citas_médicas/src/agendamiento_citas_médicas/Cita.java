@@ -34,7 +34,12 @@ public class Cita {
     }
     
     public String resumenCita(){
-        return idCita + "|" + paciente + " con "+ medico + " ( "+ tipo + " ) a las "+ horario;
+     
+        return idCita + " | Paciente: " + paciente+ " (ID: " + paciente + ")"
+        + " | Médico: " + medico
+        + " | Especialidad: " + medico
+        + " | Tipo: " + tipo
+        + " | Horario: " + horario;
     
     
     }

@@ -9,24 +9,24 @@ package agendamiento_citas_médicas;
  * @author Lenovo
  */
 public class Médico {
-    String id;
-    String nombre;
+   String nombre;
     String especialidad;
 
-    public Médico(String id, String nombre, String especialidad) {
-        this(id);
-    }
-
-    public Médico(String id) {
-        this.id = id;
+    // Constructor completo
+    public Médico(String nombre, String especialidad) {
         this.nombre = nombre;
         this.especialidad = especialidad;
     }
 
+    // Constructor solo con nombre
+    public Médico(String nombre) {
+        this.nombre = nombre;
+        this.especialidad = "General"; // puedes ajustarlo según el comboBox
+    }
+
     @Override
     public String toString() {
-        return  nombre + " - " + especialidad ;
+        return nombre + " - " + especialidad;
     }
-    
     
 }

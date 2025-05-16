@@ -12,10 +12,15 @@ public class Paciente {
     String identificacion;
     String nombre;
 
+    public Paciente(String identificacion,String nombre) {
+        this(identificacion);
+    }
+
     public Paciente(String identificacion) {
         this.identificacion = identificacion;
         this.nombre = nombre;
     }
+    @Override
     public String toString(){
     return nombre + "(ID: " + identificacion + ")";
     }
