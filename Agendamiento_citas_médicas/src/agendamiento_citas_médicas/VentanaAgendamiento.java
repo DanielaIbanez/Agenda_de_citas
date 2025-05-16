@@ -6,6 +6,9 @@ package agendamiento_citas_médicas;
 
 import javax.swing.*;
 import java.util.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -110,6 +113,25 @@ public class VentanaAgendamiento {
         JScrollPane scrollPane = new JScrollPane(textAreaCitas);
         scrollPane.setBounds(20, 370, 400, 150);
         frame.add(scrollPane);
+        
+        JButton btnBorrarCampos = new JButton("Borrar");
+        btnBorrarCampos.setBounds(170, 370, 130, 35);
+        frame.add(btnBorrarCampos);
+
+        
+        btnBorrarCampos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textFieldPaciente.setText("");  // Campo de texto
+                comboBoxMédico.setSelectedIndex(0);  // Resetear selección de médico
+                comboBoxHorario.setSelectedIndex(0); // Resetear selección de horario
+                comboBoxTipoCita.setSelectedIndex(0); // Resetear tipo de cita
+                comboBoxEspecialidad.setSelectedIndex(0); // Resetear especialidad
+                // Si no quieres borrar el historial de citas agendadas, NO limpies el textAreaCitas
+                // textAreaCitas.setText("");  // <-- solo si deseas limpiar área de mensajes
+            }
+        });
+        frame.setVisible(true);
 
         buttonAgendar.addActionListener(e -> agendarCita());
         buttonAtender.addActionListener(e -> atenderCita());
@@ -155,21 +177,32 @@ public class VentanaAgendamiento {
     }
 
     private void atenderCita() {
-        Cita cita = colaCitas.poll();
-        if (cita != null) {
-            textAreaCitas.setText("Cita atendida: " + cita.resumenCita());
-        } else {
-            textAreaCitas.setText("No hay citas en espera.");
+        if (colaCitas.isEmpty()) {
+            textAreaCitas.setText("No hay citas para atender.");
+            return;
         }
+
+        Cita citaAtendida = colaCitas.poll();  // Saca la primera cita (prioridad por orden de llegada)
+        textAreaCitas.setText("Cita atendida:\n" + citaAtendida.resumenCita());
+
+        citasAgendadas.remove(citaAtendida.paciente.nombre);
     }
 
     private void cancelarCita() {
-        Cita cita = colaCitas.poll();
+        String pacienteNombre = textFieldPaciente.getText().trim();
+
+        if (pacienteNombre.isEmpty()) {
+            textAreaCitas.setText("Por favor ingrese el nombre del paciente para cancelar la cita.");
+            return;
+        }
+
+        Cita cita = citasAgendadas.remove(pacienteNombre);
+
         if (cita != null) {
-            pilaCancelaciones.push(cita);
-            textAreaCitas.setText("Cita cancelada: " + cita.resumenCita());
+            colaCitas.remove(cita);
+            textAreaCitas.setText("Cita cancelada exitosamente: " + cita.resumenCita());
         } else {
-            textAreaCitas.setText("No hay citas para cancelar.");
+            textAreaCitas.setText("No se encontró una cita para el paciente: " + pacienteNombre);
         }
     }
 
